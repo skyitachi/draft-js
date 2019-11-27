@@ -76,6 +76,7 @@ const getListItemClasses = (
  * the contents of the editor.
  */
 class DraftEditorContents extends React.Component<Props> {
+  _domNodes = {};
   shouldComponentUpdate(nextProps: Props): boolean {
     const prevEditorState = this.props.editorState;
     const nextEditorState = nextProps.editorState;
@@ -133,6 +134,7 @@ class DraftEditorContents extends React.Component<Props> {
       editorState,
       editorKey,
       textDirectionality,
+      blockControlRef,
     } = this.props;
 
     const content = editorState.getCurrentContent();
@@ -211,6 +213,20 @@ class DraftEditorContents extends React.Component<Props> {
         'data-block': true,
         'data-editor': editorKey,
         'data-offset-key': offsetKey,
+        style: {position: 'relative'},
+        ref: (ref) => { this._domNodes[key] = ref; },
+        onMouseEnter: () => {
+          console.log(this._domNodes);
+          const clientRect = this._domNodes[key].getBoundingClientRect();
+          // console.log(this._domNode, clientRect);
+          const {left, top} = clientRect;
+          console.log("key: ", key, "element: ", Element, "top: ", top);
+          blockControlRef.style.left = `${left - 28}px`;
+          blockControlRef.style.top = `${top}px`;
+        },
+        onMouseLeave: () => {
+          this.props.blockControlRef.style.left = '-1000px';
+        },
         key,
       };
       if (customEditable !== undefined) {
@@ -220,7 +236,6 @@ class DraftEditorContents extends React.Component<Props> {
           suppressContentEditableWarning: true,
         };
       }
-
       const child = React.createElement(
         Element,
         childProps,
