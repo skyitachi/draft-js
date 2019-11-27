@@ -77,6 +77,10 @@ const getListItemClasses = (
  */
 class DraftEditorContents extends React.Component<Props> {
   _domNodes = {};
+  static defaultProps = {
+    onMouseEnter: () => {},
+    onMouseLeave: () => {},
+  };
   shouldComponentUpdate(nextProps: Props): boolean {
     const prevEditorState = this.props.editorState;
     const nextEditorState = nextProps.editorState;
@@ -134,7 +138,8 @@ class DraftEditorContents extends React.Component<Props> {
       editorState,
       editorKey,
       textDirectionality,
-      blockControlRef,
+      onMouseEnter,
+      onMouseLeave,
     } = this.props;
 
     const content = editorState.getCurrentContent();
@@ -214,18 +219,17 @@ class DraftEditorContents extends React.Component<Props> {
         'data-editor': editorKey,
         'data-offset-key': offsetKey,
         style: {position: 'relative'},
-        ref: (ref) => { this._domNodes[key] = ref; },
+        ref: ref => {
+          this._domNodes[key] = ref;
+        },
         onMouseEnter: () => {
-          console.log(this._domNodes);
           const clientRect = this._domNodes[key].getBoundingClientRect();
           // console.log(this._domNode, clientRect);
           const {left, top} = clientRect;
-          console.log("key: ", key, "element: ", Element, "top: ", top);
-          blockControlRef.style.left = `${left - 28}px`;
-          blockControlRef.style.top = `${top}px`;
+          onMouseEnter(left, top);
         },
         onMouseLeave: () => {
-          this.props.blockControlRef.style.left = '-1000px';
+          onMouseLeave();
         },
         key,
       };
