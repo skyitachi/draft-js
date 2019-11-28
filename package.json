@@ -1,5 +1,5 @@
 {
-  "name": "draft-js",
+  "name": "@dwd/draft-js",
   "description": "A React framework for building text editors.",
   "version": "0.11.2",
   "keywords": [
