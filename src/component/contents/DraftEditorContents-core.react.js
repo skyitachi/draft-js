@@ -225,11 +225,14 @@ class DraftEditorContents extends React.Component<Props> {
         onMouseEnter: () => {
           const clientRect = this._domNodes[key].getBoundingClientRect();
           // console.log(this._domNode, clientRect);
-          const {left, top} = clientRect;
-          onMouseEnter(left, top);
+          let {left, top} = clientRect;
+          if (Element === 'li') {
+            left -= 30;
+          }
+          onMouseEnter(key, left, top);
         },
         onMouseLeave: () => {
-          onMouseLeave();
+          onMouseLeave(key);
         },
         key,
       };
